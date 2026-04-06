@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "node bin/claude-api-proxy.js",
-    "test": "node --test --test-concurrency=1 test/keystore.test.js test/proxy.test.js test/setup.test.js",
+    "test": "node --test --test-concurrency=1 test/keystore.test.js test/proxy.test.js test/setup.test.js test/use-command.test.js",
     "prepublishOnly": "npm test"
   },
   "repository": {

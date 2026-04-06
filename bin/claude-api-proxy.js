@@ -14,7 +14,7 @@
 import { spawn } from 'node:child_process';
 import { runSetup, printStatus } from '../src/setup.js';
 import { startProxy } from '../src/proxy.js';
-import { loadKeystore } from '../src/keystore.js';
+import { loadKeystore, saveKeystore, getLabelAt } from '../src/keystore.js';
 
 const DEFAULT_PORT = 3131;
 const args = process.argv.slice(2);
@@ -27,6 +27,7 @@ function parseArgs(args) {
     port: DEFAULT_PORT,
     noLaunch: false,
     verbose: false,
+    useLabel: null,
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -35,6 +36,9 @@ function parseArgs(args) {
       opts.command = 'setup';
     } else if (arg === 'status') {
       opts.command = 'status';
+    } else if (arg === 'use' && args[i + 1]) {
+      opts.command = 'use';
+      opts.useLabel = args[++i];
     } else if (arg === '--no-launch') {
       opts.noLaunch = true;
     } else if (arg === '--verbose' || arg === '-v') {
@@ -70,6 +74,7 @@ claude-api-proxy — Anthropic API key rotation proxy for Claude Code
 Usage:
   claude-api-proxy setup            Add API keys interactively
   claude-api-proxy status           Show configured keys
+  claude-api-proxy use <label>      Switch active key by label (e.g. use personal)
   claude-api-proxy                  Start proxy and launch \`claude\`
   claude-api-proxy --no-launch      Start proxy only (launch claude manually)
   claude-api-proxy --port <n>       Use a custom port (default: 3131)
@@ -95,6 +100,22 @@ async function main() {
 
   if (opts.command === 'status') {
     await printStatus();
+    return;
+  }
+
+  if (opts.command === 'use') {
+    const store = await loadKeystore();
+    const idx = store.keys.findIndex((k) => k.label === opts.useLabel);
+    if (idx === -1) {
+      const labels = store.keys.map((k) => k.label).join(', ');
+      process.stderr.write(`[claude-api-proxy] No key with label "${opts.useLabel}".\n`);
+      process.stderr.write(`Available labels: ${labels || '(none)'}\n`);
+      process.exit(1);
+    }
+    const prev = getLabelAt(store, store.currentIndex);
+    store.currentIndex = idx;
+    await saveKeystore(store);
+    process.stdout.write(`[claude-api-proxy] Active key: ${prev} → ${opts.useLabel}\n`);
     return;
   }
 
