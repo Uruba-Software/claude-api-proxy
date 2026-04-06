@@ -67,8 +67,8 @@ export async function ask(reader, question, output) {
 export async function runSetup({ input = process.stdin, output = process.stdout } = {}) {
   const reader = makeLineReader(input);
 
-  output.write('\n[claude-code-proxy] Setup — Add your Anthropic API keys\n');
-  output.write('Keys are stored in ~/.claude-code-proxy.json\n\n');
+  output.write('\n[claude-api-proxy] Setup — Add your Anthropic API keys\n');
+  output.write('Keys are stored in ~/.claude-api-proxy.json\n\n');
 
   const store = await loadKeystore();
 
@@ -111,13 +111,13 @@ export async function runSetup({ input = process.stdin, output = process.stdout 
   reader.close();
 
   if (store.keys.length === 0) {
-    output.write('\nNo keys configured. Re-run `claude-code-proxy setup` to add keys.\n\n');
+    output.write('\nNo keys configured. Re-run `claude-api-proxy setup` to add keys.\n\n');
     return;
   }
 
   await saveKeystore(store);
-  output.write(`\n✓ Saved ${store.keys.length} key(s) to ~/.claude-code-proxy.json\n`);
-  output.write('Run `claude-code-proxy status` to verify, then `claude-code-proxy` to start.\n\n');
+  output.write(`\n✓ Saved ${store.keys.length} key(s) to ~/.claude-api-proxy.json\n`);
+  output.write('Run `claude-api-proxy status` to verify, then `claude-api-proxy` to start.\n\n');
 }
 
 /**
@@ -130,11 +130,11 @@ export async function printStatus({ output = process.stdout } = {}) {
   const store = await loadKeystore();
 
   if (store.keys.length === 0) {
-    output.write('[claude-code-proxy] No keys configured. Run: claude-code-proxy setup\n');
+    output.write('[claude-api-proxy] No keys configured. Run: claude-api-proxy setup\n');
     return;
   }
 
-  output.write('\n[claude-code-proxy] Configured API keys:\n\n');
+  output.write('\n[claude-api-proxy] Configured API keys:\n\n');
   store.keys.forEach((k, i) => {
     const active = i === store.currentIndex ? ' ← active' : '';
     const masked = k.key.slice(0, 12) + '...' + k.key.slice(-4);

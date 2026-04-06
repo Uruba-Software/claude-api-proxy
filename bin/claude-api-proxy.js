@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * bin/claude-code-proxy.js — CLI entry point.
+ * bin/claude-api-proxy.js — CLI entry point.
  *
  * Commands:
- *   claude-code-proxy setup          Interactive wizard to add API keys
- *   claude-code-proxy status         List configured keys
- *   claude-code-proxy                Start proxy + launch `claude`
- *   claude-code-proxy --no-launch    Start proxy only
- *   claude-code-proxy --port <n>     Use custom port (default: 3131)
- *   claude-code-proxy --verbose/-v   Log each request
+ *   claude-api-proxy setup          Interactive wizard to add API keys
+ *   claude-api-proxy status         List configured keys
+ *   claude-api-proxy                Start proxy + launch `claude`
+ *   claude-api-proxy --no-launch    Start proxy only
+ *   claude-api-proxy --port <n>     Use custom port (default: 3131)
+ *   claude-api-proxy --verbose/-v   Log each request
  */
 
 import { spawn } from 'node:child_process';
@@ -42,7 +42,7 @@ function parseArgs(args) {
     } else if (arg === '--port' && args[i + 1]) {
       const p = parseInt(args[++i], 10);
       if (isNaN(p) || p < 1 || p > 65535) {
-        process.stderr.write(`[claude-code-proxy] Invalid port: ${args[i]}\n`);
+        process.stderr.write(`[claude-api-proxy] Invalid port: ${args[i]}\n`);
         process.exit(1);
       }
       opts.port = p;
@@ -65,17 +65,17 @@ function parseArgs(args) {
 
 function printHelp() {
   process.stdout.write(`
-claude-code-proxy — Anthropic API key rotation proxy for Claude Code
+claude-api-proxy — Anthropic API key rotation proxy for Claude Code
 
 Usage:
-  claude-code-proxy setup            Add API keys interactively
-  claude-code-proxy status           Show configured keys
-  claude-code-proxy                  Start proxy and launch \`claude\`
-  claude-code-proxy --no-launch      Start proxy only (launch claude manually)
-  claude-code-proxy --port <n>       Use a custom port (default: 3131)
-  claude-code-proxy --verbose/-v     Log each forwarded request
-  claude-code-proxy --version        Print version
-  claude-code-proxy --help           Show this help
+  claude-api-proxy setup            Add API keys interactively
+  claude-api-proxy status           Show configured keys
+  claude-api-proxy                  Start proxy and launch \`claude\`
+  claude-api-proxy --no-launch      Start proxy only (launch claude manually)
+  claude-api-proxy --port <n>       Use a custom port (default: 3131)
+  claude-api-proxy --verbose/-v     Log each forwarded request
+  claude-api-proxy --version        Print version
+  claude-api-proxy --help           Show this help
 
 Once the proxy is running, point Claude Code at it:
   ANTHROPIC_BASE_URL=http://127.0.0.1:3131 ANTHROPIC_API_KEY=proxy claude
@@ -101,8 +101,8 @@ async function main() {
   // Default command: start proxy (and optionally launch claude)
   const store = await loadKeystore();
   if (!store.keys || store.keys.length === 0) {
-    process.stderr.write('[claude-code-proxy] No API keys configured.\n');
-    process.stderr.write('Run `claude-code-proxy setup` first.\n');
+    process.stderr.write('[claude-api-proxy] No API keys configured.\n');
+    process.stderr.write('Run `claude-api-proxy setup` first.\n');
     process.exit(1);
   }
 
@@ -110,7 +110,7 @@ async function main() {
 
   if (opts.noLaunch) {
     process.stderr.write(
-      `[claude-code-proxy] Proxy running. Launch claude manually:\n` +
+      `[claude-api-proxy] Proxy running. Launch claude manually:\n` +
       `  ANTHROPIC_BASE_URL=http://127.0.0.1:${opts.port} ANTHROPIC_API_KEY=proxy claude\n`
     );
     // Keep the process alive
@@ -118,7 +118,7 @@ async function main() {
   }
 
   // Launch `claude` with the proxy env vars injected
-  process.stderr.write(`[claude-code-proxy] Launching claude...\n`);
+  process.stderr.write(`[claude-api-proxy] Launching claude...\n`);
 
   const claudeArgs = args.filter(
     (a) => !['--no-launch', '--verbose', '-v'].includes(a) &&
@@ -137,7 +137,7 @@ async function main() {
   });
 
   child.on('error', (err) => {
-    process.stderr.write(`[claude-code-proxy] Failed to launch claude: ${err.message}\n`);
+    process.stderr.write(`[claude-api-proxy] Failed to launch claude: ${err.message}\n`);
     process.stderr.write(
       `Make sure Claude Code CLI is installed: https://claude.ai/code\n`
     );
@@ -156,6 +156,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  process.stderr.write(`[claude-code-proxy] Fatal error: ${err.message}\n`);
+  process.stderr.write(`[claude-api-proxy] Fatal error: ${err.message}\n`);
   process.exit(1);
 });

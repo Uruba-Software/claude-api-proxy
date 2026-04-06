@@ -1,27 +1,27 @@
 {
-  "name": "claude-code-proxy",
+  "name": "claude-api-proxy",
   "version": "0.1.0",
   "description": "CLI proxy for Claude Code that rotates Anthropic API keys automatically on quota exhaustion",
   "type": "module",
   "bin": {
-    "claude-code-proxy": "./bin/claude-code-proxy.js"
+    "claude-api-proxy": "./bin/claude-api-proxy.js"
   },
   "main": "./src/proxy.js",
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "node bin/claude-code-proxy.js",
+    "start": "node bin/claude-api-proxy.js",
     "test": "node --test --test-concurrency=1 test/keystore.test.js test/proxy.test.js test/setup.test.js",
     "prepublishOnly": "npm test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Uruba-Software/claude-code-proxy.git"
+    "url": "https://github.com/Uruba-Software/claude-api-proxy.git"
   },
-  "homepage": "https://github.com/Uruba-Software/claude-code-proxy#readme",
+  "homepage": "https://github.com/Uruba-Software/claude-api-proxy#readme",
   "bugs": {
-    "url": "https://github.com/Uruba-Software/claude-code-proxy/issues"
+    "url": "https://github.com/Uruba-Software/claude-api-proxy/issues"
   },
   "files": [
     "bin/",

@@ -115,8 +115,8 @@ function unpatchHttps() {
 
 // ── Fixtures ───────────────────────────────────────────────────────────────
 
-// Use a temp keystore path so tests don't touch the real ~/.claude-code-proxy.json
-const TEST_KEYSTORE = join(tmpdir(), `claude-code-proxy-test-${process.pid}.json`);
+// Use a temp keystore path so tests don't touch the real ~/.claude-api-proxy.json
+const TEST_KEYSTORE = join(tmpdir(), `claude-api-proxy-test-${process.pid}.json`);
 
 // Override KEYSTORE_PATH used by proxy/keystore at runtime by writing to the
 // same path the module uses. We'll monkey-patch the module's exported constant.

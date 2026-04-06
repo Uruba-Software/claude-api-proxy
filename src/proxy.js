@@ -17,7 +17,7 @@ const ANTHROPIC_PORT = 443;
  * @param {string} toLabel
  */
 function logRotation(fromLabel, toLabel) {
-  process.stderr.write(`[claude-code-proxy] ⚡ KEY ROTATED: ${fromLabel} → ${toLabel}\n`);
+  process.stderr.write(`[claude-api-proxy] ⚡ KEY ROTATED: ${fromLabel} → ${toLabel}\n`);
 }
 
 /**
@@ -222,7 +222,7 @@ export function createProxyServer({ verbose = false } = {}) {
 
     if (!store.keys || store.keys.length === 0) {
       res.writeHead(500);
-      res.end('[claude-code-proxy] No API keys configured. Run: claude-code-proxy setup\n');
+      res.end('[claude-api-proxy] No API keys configured. Run: claude-api-proxy setup\n');
       return;
     }
 
@@ -235,7 +235,7 @@ export function createProxyServer({ verbose = false } = {}) {
       const label = getLabelAt(store, store.currentIndex);
 
       if (verbose) {
-        process.stderr.write(`[claude-code-proxy] → ${req.method} ${req.url} (key: ${label})\n`);
+        process.stderr.write(`[claude-api-proxy] → ${req.method} ${req.url} (key: ${label})\n`);
       }
 
       if (streaming) {
@@ -319,7 +319,7 @@ export function createProxyServer({ verbose = false } = {}) {
 
     // Exhausted all retries
     res.writeHead(429);
-    res.end('[claude-code-proxy] All API keys exhausted.\n');
+    res.end('[claude-api-proxy] All API keys exhausted.\n');
   });
 
   return server;
@@ -337,7 +337,7 @@ export function startProxy(port, options = {}) {
     const server = createProxyServer(options);
     server.on('error', reject);
     server.listen(port, '127.0.0.1', () => {
-      process.stderr.write(`[claude-code-proxy] Proxy listening on http://127.0.0.1:${port}\n`);
+      process.stderr.write(`[claude-api-proxy] Proxy listening on http://127.0.0.1:${port}\n`);
       resolve(server);
     });
   });

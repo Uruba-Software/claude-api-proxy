@@ -1,11 +1,11 @@
-# Contributing to claude-code-proxy
+# Contributing to claude-api-proxy
 
 ## Local dev setup
 
 ```bash
-git clone https://github.com/Uruba-Software/claude-code-proxy.git
-cd claude-code-proxy
-npm link          # makes `claude-code-proxy` available globally from this working copy
+git clone https://github.com/Uruba-Software/claude-api-proxy.git
+cd claude-api-proxy
+npm link          # makes `claude-api-proxy` available globally from this working copy
 ```
 
 Run tests:
@@ -22,9 +22,9 @@ Tests use Node's built-in `node:test` runner — no external test framework need
 
 ```
 bin/
-  claude-code-proxy.js    CLI entry point — arg parsing, command dispatch, spawns claude
+  claude-api-proxy.js    CLI entry point — arg parsing, command dispatch, spawns claude
 src/
-  keystore.js             Load/save ~/.claude-code-proxy.json, key rotation logic
+  keystore.js             Load/save ~/.claude-api-proxy.json, key rotation logic
   proxy.js                HTTP proxy server — forwards requests, detects exhaustion, retries
   setup.js                Interactive wizard (readline) + printStatus
 test/
@@ -40,7 +40,7 @@ test/
 
 ## Key technical decisions
 
-- **`--test-concurrency=1`** — test files share `~/.claude-code-proxy.json` by default; concurrency 1 prevents race conditions. Set `CLAUDE_CODE_PROXY_KEYSTORE` to a temp path to run files in parallel.
+- **`--test-concurrency=1`** — test files share `~/.claude-api-proxy.json` by default; concurrency 1 prevents race conditions. Set `CLAUDE_CODE_PROXY_KEYSTORE` to a temp path to run files in parallel.
 - **`makeLineReader` pattern in setup.js** — avoids `readline was closed` errors when testing with a pre-filled Readable stream. Uses the `line` event to buffer lines and resolves `nextLine()` promises from the buffer instead of using `rl.question()`.
 - **`https.request` monkey-patch in proxy.test.js** — proxy.js hardcodes `api.anthropic.com`. Tests redirect outgoing HTTPS to a local plain HTTP mock by replacing `https.request` at the module level.
 - **`shell: true` on Windows** — required for spawning `claude` on Windows (the CLI is a `.cmd` file that needs a shell to execute).

@@ -49,13 +49,13 @@ jobs:
         run: npm install -g .
 
       - name: Verify CLI is accessible
-        run: claude-code-proxy --version
+        run: claude-api-proxy --version
 
       - name: Verify help works
-        run: claude-code-proxy --help
+        run: claude-api-proxy --help
 
       - name: Uninstall
-        run: npm uninstall -g claude-code-proxy
+        run: npm uninstall -g claude-api-proxy
 
   publish:
     name: Publish to npm

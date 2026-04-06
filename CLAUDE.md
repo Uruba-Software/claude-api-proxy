@@ -1,4 +1,4 @@
-# claude-code-proxy — Claude Instructions
+# claude-api-proxy — Claude Instructions
 
 ## Release process (ALWAYS follow when pushing code changes)
 
@@ -52,15 +52,15 @@ to npm automatically if everything passes.
 
 ## Accounts & references
 - GitHub org: Uruba-Software (owner: biyro02)
-- GitHub repo: https://github.com/Uruba-Software/claude-code-proxy
-- npm package: https://www.npmjs.com/package/claude-code-proxy
+- GitHub repo: https://github.com/Uruba-Software/claude-api-proxy
+- npm package: https://www.npmjs.com/package/claude-api-proxy
 - npm publisher account: buluad
 - npm token type: Granular Access Token, no 2FA required — stored as `NPM_TOKEN` in GitHub repo secrets
 - Default branch: `main`
 - CI: GitHub Actions (`.github/workflows/test.yml`)
 
 ## Key technical decisions & gotchas
-- `--test-concurrency=1` in npm test: test files share `~/.claude-code-proxy.json`; serial execution prevents file-level race conditions
+- `--test-concurrency=1` in npm test: test files share `~/.claude-api-proxy.json`; serial execution prevents file-level race conditions
 - `CLAUDE_CODE_PROXY_KEYSTORE` env var: overrides the keystore path — set it to a temp file if you need to run test files in parallel
 - `makeLineReader` in setup.js: uses readline `line` event + buffer instead of `rl.question()` to avoid "readline was closed" errors with pre-filled Readable streams in tests
 - `https.request` monkey-patch in proxy.test.js: since proxy.js hardcodes `api.anthropic.com`, tests replace `https.request` at the module level to redirect to a local HTTP mock
@@ -70,11 +70,11 @@ to npm automatically if everything passes.
 
 ## Project overview
 Local HTTP proxy for Claude Code that rotates Anthropic API keys on quota/credit
-exhaustion. Users install it globally: `npm install -g claude-code-proxy`.
+exhaustion. Users install it globally: `npm install -g claude-api-proxy`.
 
 - Runtime: Node.js ≥ 18, ESM (`"type": "module"`)
 - Dependencies: none (zero runtime dependencies)
-- Key storage: `~/.claude-code-proxy.json` (overridable via `CLAUDE_CODE_PROXY_KEYSTORE`)
+- Key storage: `~/.claude-api-proxy.json` (overridable via `CLAUDE_CODE_PROXY_KEYSTORE`)
 - Default proxy port: `3131` (overridable via `--port`)
 - Tests: `node:test` built-in, no external test framework
 - Error types that trigger rotation: `credit_balance_too_low`, `rate_limit_error`, `overloaded_error`

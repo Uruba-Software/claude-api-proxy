@@ -1,5 +1,5 @@
 /**
- * keystore.js — Load/save ~/.claude-code-proxy.json, key rotation logic.
+ * keystore.js — Load/save ~/.claude-api-proxy.json, key rotation logic.
  *
  * Key file schema:
  * {
@@ -21,7 +21,7 @@ import { join } from 'node:path';
  */
 export function getKeystorePath() {
   return process.env.CLAUDE_CODE_PROXY_KEYSTORE
-    ?? join(homedir(), '.claude-code-proxy.json');
+    ?? join(homedir(), '.claude-api-proxy.json');
 }
 
 /** @deprecated Use getKeystorePath() — kept for direct reference in tests. */

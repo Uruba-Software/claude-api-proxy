@@ -1,14 +1,14 @@
 <p align="center">
-  <h1 align="center">claude-code-proxy</h1>
+  <h1 align="center">claude-api-proxy</h1>
   <p align="center">Anthropic API key rotation proxy for Claude Code — seamlessly switch keys when one account's quota runs out.</p>
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/claude-code-proxy"><img src="https://img.shields.io/npm/v/claude-code-proxy?color=cb3837&label=npm&logo=npm" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/claude-code-proxy"><img src="https://img.shields.io/npm/dm/claude-code-proxy?color=cb3837&logo=npm&label=downloads" alt="npm downloads"></a>
-  <a href="https://github.com/Uruba-Software/claude-code-proxy/actions/workflows/test.yml"><img src="https://github.com/Uruba-Software/claude-code-proxy/actions/workflows/test.yml/badge.svg" alt="CI"></a>
-  <a href="https://nodejs.org"><img src="https://img.shields.io/node/v/claude-code-proxy?color=339933&logo=node.js&logoColor=white" alt="Node.js version"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/npm/l/claude-code-proxy?color=blue" alt="License"></a>
+  <a href="https://www.npmjs.com/package/claude-api-proxy"><img src="https://img.shields.io/npm/v/claude-api-proxy?color=cb3837&label=npm&logo=npm" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/claude-api-proxy"><img src="https://img.shields.io/npm/dm/claude-api-proxy?color=cb3837&logo=npm&label=downloads" alt="npm downloads"></a>
+  <a href="https://github.com/Uruba-Software/claude-api-proxy/actions/workflows/test.yml"><img src="https://github.com/Uruba-Software/claude-api-proxy/actions/workflows/test.yml/badge.svg" alt="CI"></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/node/v/claude-api-proxy?color=339933&logo=node.js&logoColor=white" alt="Node.js version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/npm/l/claude-api-proxy?color=blue" alt="License"></a>
 </p>
 
 <p align="center">
@@ -20,21 +20,21 @@
 ---
 
 ```
-claude-code-proxy setup      # add your API keys
-claude-code-proxy            # start proxy + launch Claude Code
-claude-code-proxy status     # see which key is active
+claude-api-proxy setup      # add your API keys
+claude-api-proxy            # start proxy + launch Claude Code
+claude-api-proxy status     # see which key is active
 ```
 
 ---
 
 ## How it works
 
-`claude-code-proxy` runs a local HTTP proxy on port `3131`. It starts Claude Code as a child process with `ANTHROPIC_BASE_URL` pointing at the proxy. Every API request is forwarded to `api.anthropic.com` with the currently active key injected.
+`claude-api-proxy` runs a local HTTP proxy on port `3131`. It starts Claude Code as a child process with `ANTHROPIC_BASE_URL` pointing at the proxy. Every API request is forwarded to `api.anthropic.com` with the currently active key injected.
 
 When a quota or credit exhaustion error is detected (`402`, `429`, `529` / `credit_balance_too_low`, `rate_limit_error`, `overloaded_error`), the proxy silently rotates to the next configured key and retries — without interrupting your Claude Code session.
 
 ```
-[claude-code-proxy] ⚡ KEY ROTATED: work → personal
+[claude-api-proxy] ⚡ KEY ROTATED: work → personal
 ```
 
 If all keys are exhausted, the original error is passed back to Claude Code unchanged.
@@ -51,7 +51,7 @@ If all keys are exhausted, the original error is passed back to Claude Code unch
 ## Install
 
 ```bash
-npm install -g claude-code-proxy
+npm install -g claude-api-proxy
 ```
 
 ---
@@ -61,12 +61,12 @@ npm install -g claude-code-proxy
 **1. Add your API keys:**
 
 ```bash
-claude-code-proxy setup
+claude-api-proxy setup
 ```
 
 ```
-[claude-code-proxy] Setup — Add your Anthropic API keys
-Keys are stored in ~/.claude-code-proxy.json
+[claude-api-proxy] Setup — Add your Anthropic API keys
+Keys are stored in ~/.claude-api-proxy.json
 
 Key label (e.g. "work", "personal") [leave blank to finish]: work
 API key for "work" (sk-ant-...): sk-ant-api03-...
@@ -79,13 +79,13 @@ API key for "personal" (sk-ant-...): sk-ant-api03-...
 
 Add another key? (y/N): n
 
-✓ Saved 2 key(s) to ~/.claude-code-proxy.json
+✓ Saved 2 key(s) to ~/.claude-api-proxy.json
 ```
 
 **2. Start the proxy and Claude Code:**
 
 ```bash
-claude-code-proxy
+claude-api-proxy
 ```
 
 That's it. Claude Code launches automatically with the proxy configured. When the first key hits its quota, the proxy rotates to the next key transparently.
@@ -94,56 +94,56 @@ That's it. Claude Code launches automatically with the proxy configured. When th
 
 ## Commands
 
-### `claude-code-proxy setup`
+### `claude-api-proxy setup`
 
-Interactive wizard to add API keys. Stores them in `~/.claude-code-proxy.json`.
+Interactive wizard to add API keys. Stores them in `~/.claude-api-proxy.json`.
 
-### `claude-code-proxy status`
+### `claude-api-proxy status`
 
 List all configured keys with their labels and which one is currently active.
 
 ```
-[claude-code-proxy] Configured API keys:
+[claude-api-proxy] Configured API keys:
 
   [1] work                 sk-ant-api03...xxxx ← active
   [2] personal             sk-ant-api03...yyyy
 ```
 
-### `claude-code-proxy`
+### `claude-api-proxy`
 
 Start the proxy on port `3131` and launch `claude` with the correct environment variables injected (`ANTHROPIC_BASE_URL`, `ANTHROPIC_API_KEY`).
 
-### `claude-code-proxy --no-launch`
+### `claude-api-proxy --no-launch`
 
 Start the proxy only. Useful if you want to launch Claude Code manually or connect another tool.
 
 ```bash
-claude-code-proxy --no-launch
+claude-api-proxy --no-launch
 # Proxy running. Launch claude manually:
 #   ANTHROPIC_BASE_URL=http://127.0.0.1:3131 ANTHROPIC_API_KEY=proxy claude
 ```
 
-### `claude-code-proxy --port <n>`
+### `claude-api-proxy --port <n>`
 
 Use a custom port instead of the default `3131`.
 
 ```bash
-claude-code-proxy --port 8080
+claude-api-proxy --port 8080
 ```
 
-### `claude-code-proxy --verbose` / `-v`
+### `claude-api-proxy --verbose` / `-v`
 
 Log each forwarded request and which key is being used to stderr.
 
 ```
-[claude-code-proxy] → POST /v1/messages (key: work)
+[claude-api-proxy] → POST /v1/messages (key: work)
 ```
 
 ---
 
 ## Key storage
 
-Keys are stored in `~/.claude-code-proxy.json`:
+Keys are stored in `~/.claude-api-proxy.json`:
 
 ```json
 {
