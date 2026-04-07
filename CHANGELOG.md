@@ -1,6 +1,10 @@
 # Changelog
 
-## [0.1.0] — 2025-04-06
+## [0.2.0] — 2026-04-07
+
+- Add `claude-api-proxy use <label>` command to manually switch the active key without waiting for quota exhaustion — useful for testing and explicit key selection
+
+## [0.1.0] — 2026-04-06
 
 Initial release.
 

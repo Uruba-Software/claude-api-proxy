@@ -1,6 +1,6 @@
 {
   "name": "claude-api-proxy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CLI proxy for Claude Code that rotates Anthropic API keys automatically on quota exhaustion",
   "type": "module",
   "bin": {
